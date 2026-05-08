@@ -680,7 +680,7 @@
   .tag-chip:hover { background: var(--hover); }
   #tags-panel { padding: 6px 14px 4px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
   #tags-panel-label { font-size: 9px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; margin-right: 4px; letter-spacing: 0.06em; }
-  #tags-filter-bar { padding: 5px 10px; border-bottom: 1px solid var(--sidebar-border); display: none; flex-wrap: wrap; gap: 4px; align-items: center; }
+  #tags-filter-bar { padding: 5px 10px; border-top: 1px solid var(--sidebar-border); display: none; flex-wrap: wrap; gap: 4px; align-items: center; flex-shrink: 0; }
   #tags-filter-bar.visible { display: flex; }
   .tag-filter-chip { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.07);
     color: var(--sidebar-subtext); border-radius: 4px; padding: 2px 7px; font-size: 10px;
@@ -716,9 +716,28 @@
   #split-note-title { font-size: 13px; font-weight: 700; color: var(--ink); font-family: Verdana, sans-serif; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #split-note-select { font-size: 11px; color: var(--ink-soft); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; cursor: pointer; max-width: 180px; }
 
-  /* ── RECENT NOTES (top of sidebar) ── */
-  #recent-notes-section { border-bottom: 1px solid var(--sidebar-border); padding-bottom: 4px; }
-  .recent-header { padding: 7px 14px 3px; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sidebar-subtext); font-family: Verdana, sans-serif; }
+  /* ── RECENT NOTES TOPBAR DROPDOWN ── */
+  #recent-wrap { position: relative; }
+  #recent-dropdown {
+    display: none; position: absolute; top: calc(100% + 6px); left: 0;
+    background: var(--topbar-bg, var(--sidebar)); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; min-width: 260px; max-width: 340px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5); z-index: 200; padding: 4px;
+    animation: fadeIn 0.12s ease;
+  }
+  #recent-wrap.open #recent-dropdown { display: block; }
+  .recent-drop-item {
+    display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+    border-radius: 5px; cursor: pointer; transition: background 0.1s;
+  }
+  .recent-drop-item:hover { background: rgba(255,255,255,0.07); }
+  .recent-drop-icon { font-size: 13px; flex-shrink: 0; opacity: 0.7; }
+  .recent-drop-text { flex: 1; min-width: 0; }
+  .recent-drop-title { font-size: 12px; color: rgba(255,255,255,0.85); font-family: Verdana, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .recent-drop-nb { font-size: 9px; color: rgba(255,255,255,0.35); font-family: 'JetBrains Mono', monospace; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .recent-drop-empty { padding: 10px 12px; font-size: 11px; color: rgba(255,255,255,0.3); font-family: Verdana, sans-serif; text-align: center; }
+  #recent-drop-clear { width: 100%; text-align: center; background: none; border: none; border-top: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); font-size: 10px; font-family: Verdana, sans-serif; padding: 6px; cursor: pointer; margin-top: 2px; border-radius: 0 0 5px 5px; transition: color 0.1s; }
+  #recent-drop-clear:hover { color: rgba(255,255,255,0.6); }
 
   /* ── HOVER PREVIEW ── */
   #note-hover-preview { position: fixed; z-index: 600; background: var(--paper); border: 1px solid var(--border);
@@ -1040,6 +1059,10 @@
 
 <div id="topbar">
   <div class="logo">No<span>ta</span></div>
+  <div id="recent-wrap" class="settings-wrap">
+    <button class="tb-btn" id="recent-btn" disabled>🕐 Recent ▾</button>
+    <div id="recent-dropdown"></div>
+  </div>
   <div class="folder-wrap">
     <div id="folder-status">No folder open</div>
     <div id="folder-dropdown">
@@ -1081,7 +1104,6 @@
 <div id="app">
   <div id="sidebar">
     <div id="search-wrap"><input type="text" id="search" placeholder="Search all notes…" autocomplete="off"></div>
-    <div id="tags-filter-bar"><span style="font-size:9px;color:var(--sidebar-subtext);font-family:'JetBrains Mono',monospace;margin-right:4px;white-space:nowrap;flex-shrink:0">🏷 Tags:</span><div id="tag-filter-chips" style="display:flex;flex-wrap:wrap;gap:3px;flex:1"></div><button id="tag-filter-clear">✕ Clear</button></div>
     <div id="sort-bar">
       <span id="sort-bar-label">Sort:</span>
       <button class="sort-btn" data-sort="date-desc">Date ↓</button>
@@ -1090,6 +1112,7 @@
       <button class="sort-btn" data-sort="alpha-desc">Z→A</button>
     </div>
     <div id="tree"></div>
+    <div id="tags-filter-bar"><span style="font-size:9px;color:var(--sidebar-subtext);font-family:'JetBrains Mono',monospace;margin-right:4px;white-space:nowrap;flex-shrink:0">🏷 Tags:</span><div id="tag-filter-chips" style="display:flex;flex-wrap:wrap;gap:3px;flex:1"></div><button id="tag-filter-clear">✕ Clear</button></div>
     <div id="sidebar-btns">
       <button class="sb-btn" id="add-notebook-btn" disabled><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Notebook</button>
       <button class="sb-btn primary" id="add-note-btn" disabled><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Note</button>
@@ -1834,6 +1857,7 @@ async function loadAllNotes(){
 
   document.getElementById('add-note-btn').disabled=false;
   document.getElementById('add-notebook-btn').disabled=false;
+  renderRecentDropdown();
   renderTree();
   // Open most-recently-updated note
   const all=getAllNotes();
@@ -4475,6 +4499,15 @@ function buildPwVault(el) {
     markUnsaved();
   };
 
+  // Intercept mousedown on the vault in capture phase to prevent the contentEditable
+  // parent (#note-body) from claiming focus when clicking cell-value spans.
+  // This must be on the wrap (not inside render) so it's only attached once.
+  wrap.addEventListener('mousedown', ev => {
+    if (ev.target.classList.contains('pw-cell-value')) {
+      ev.preventDefault(); // stops CE parent grabbing focus/cursor
+    }
+  }, true); // capture phase — before browser's native CE selection logic
+
   const copyVal = (val, btn) => {
     navigator.clipboard.writeText(val).then(() => {
       const orig = btn.textContent;
@@ -4507,39 +4540,87 @@ function buildPwVault(el) {
     table.appendChild(thead);
     const tbody = document.createElement('tbody');
 
+    // Open an inline input for a field when its span is clicked.
+    const openEditor = (span, field, entryIdx) => {
+      const inp = document.createElement('input');
+      inp.type = field === 'password' ? 'password' : 'text';
+      inp.value = entries[entryIdx][field] || '';
+      inp.style.cssText = 'font-size:11px;font-family:"JetBrains Mono",monospace;border:1px solid var(--accent);border-radius:3px;padding:2px 5px;width:100%;background:var(--bg);color:var(--ink);outline:none;';
+      inp.addEventListener('mousedown', ev => ev.stopPropagation());
+      let finishing = false;
+      const finish = () => {
+        if (finishing) return;
+        finishing = true;
+        entries[entryIdx][field] = inp.value;
+        save();
+        render();
+      };
+      inp.addEventListener('blur', finish);
+      inp.addEventListener('keydown', ev => {
+        ev.stopPropagation();
+        if (ev.key === 'Enter') { ev.preventDefault(); inp.blur(); }
+        if (ev.key === 'Escape') { finishing = true; render(); }
+      });
+      span.replaceWith(inp);
+      inp.focus();
+      inp.select();
+    };
+
+    const makeEditHandler = (span, field, entryIdx) => {
+      // Use mousedown (not click) so we fire before the browser's CE focus handling,
+      // and pair with the capture-phase preventDefault above on the wrap.
+      span.addEventListener('mousedown', ev => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        openEditor(span, field, entryIdx);
+      });
+    };
+
+    const inpStyle = 'font-size:11px;font-family:"JetBrains Mono",monospace;border:1px solid var(--border);border-radius:3px;padding:2px 5px;width:100%;background:transparent;color:var(--ink);outline:none;box-sizing:border-box;';
+    const inpFocusStyle = 'border-color:var(--accent);';
+
     entries.forEach((entry, idx) => {
       const tr = document.createElement('tr');
 
-      // URL cell
+      // URL cell — always-visible plain input
       const tdUrl = document.createElement('td');
       const urlDiv = document.createElement('div'); urlDiv.className = 'pw-cell';
-      const urlVal = document.createElement('span'); urlVal.className = 'pw-cell-value';
-      urlVal.textContent = entry.url || '';
-      urlVal.title = entry.url || '';
+      const urlInp = document.createElement('input'); urlInp.type = 'text';
+      urlInp.value = entry.url || ''; urlInp.placeholder = 'https://...';
+      urlInp.style.cssText = inpStyle;
+      urlInp.addEventListener('mousedown', ev => ev.stopPropagation());
+      urlInp.addEventListener('focus', () => { urlInp.style.borderColor = 'var(--accent)'; });
+      urlInp.addEventListener('blur', () => { urlInp.style.borderColor = ''; entries[idx].url = urlInp.value; save(); });
+      urlInp.addEventListener('keydown', ev => ev.stopPropagation());
       const urlCopy = document.createElement('button'); urlCopy.className = 'pw-copy-btn'; urlCopy.textContent = 'Copy';
-      urlCopy.addEventListener('click', () => copyVal(entry.url, urlCopy));
-      urlDiv.appendChild(urlVal); urlDiv.appendChild(urlCopy);
+      urlCopy.addEventListener('click', () => copyVal(urlInp.value, urlCopy));
+      urlDiv.appendChild(urlInp); urlDiv.appendChild(urlCopy);
       tdUrl.appendChild(urlDiv);
 
-      // Username cell
+      // Username cell — always-visible plain input
       const tdUser = document.createElement('td');
       const userDiv = document.createElement('div'); userDiv.className = 'pw-cell';
-      const userVal = document.createElement('span'); userVal.className = 'pw-cell-value';
-      userVal.textContent = entry.username || '';
-      userVal.title = entry.username || '';
+      const userInp = document.createElement('input'); userInp.type = 'text';
+      userInp.value = entry.username || ''; userInp.placeholder = 'username';
+      userInp.style.cssText = inpStyle;
+      userInp.addEventListener('mousedown', ev => ev.stopPropagation());
+      userInp.addEventListener('focus', () => { userInp.style.borderColor = 'var(--accent)'; });
+      userInp.addEventListener('blur', () => { userInp.style.borderColor = ''; entries[idx].username = userInp.value; save(); });
+      userInp.addEventListener('keydown', ev => ev.stopPropagation());
       const userCopy = document.createElement('button'); userCopy.className = 'pw-copy-btn'; userCopy.textContent = 'Copy';
-      userCopy.addEventListener('click', () => copyVal(entry.username, userCopy));
-      userDiv.appendChild(userVal); userDiv.appendChild(userCopy);
+      userCopy.addEventListener('click', () => copyVal(userInp.value, userCopy));
+      userDiv.appendChild(userInp); userDiv.appendChild(userCopy);
       tdUser.appendChild(userDiv);
 
-      // Password cell
+      // Password cell — hidden by default, click span to edit (existing behaviour)
       const tdPw = document.createElement('td');
       const pwDiv = document.createElement('div'); pwDiv.className = 'pw-cell';
       const pwVal = document.createElement('span'); pwVal.className = 'pw-cell-value masked';
       let pwVisible = false;
       pwVal.textContent = '••••••••';
+      makeEditHandler(pwVal, 'password', idx);
       const pwShow = document.createElement('button'); pwShow.className = 'pw-show-btn'; pwShow.textContent = '👁';
-      pwShow.title = 'Show/hide'; 
+      pwShow.title = 'Show/hide';
       pwShow.addEventListener('click', () => {
         pwVisible = !pwVisible;
         pwVal.textContent = pwVisible ? entry.password : '••••••••';
@@ -4566,22 +4647,6 @@ function buildPwVault(el) {
     table.appendChild(tbody);
     wrap.appendChild(table);
 
-    // Inline edit support: double-click a cell value to edit
-    wrap.querySelectorAll('.pw-cell-value').forEach((span, si) => {
-      span.addEventListener('dblclick', () => {
-        const field = si % 3 === 0 ? 'url' : si % 3 === 1 ? 'username' : 'password';
-        const entryIdx = Math.floor(si / 3);
-        const inp = document.createElement('input');
-        inp.type = field === 'password' ? 'password' : 'text';
-        inp.value = entries[entryIdx][field] || '';
-        inp.style.cssText = 'font-size:11px;font-family:"JetBrains Mono",monospace;border:1px solid var(--accent);border-radius:3px;padding:2px 5px;width:100%;background:var(--bg);color:var(--ink);outline:none;';
-        const finish = () => { entries[entryIdx][field] = inp.value; save(); render(); };
-        inp.addEventListener('blur', finish);
-        inp.addEventListener('keydown', e => { if (e.key==='Enter') inp.blur(); if (e.key==='Escape') render(); });
-        span.replaceWith(inp); inp.focus(); inp.select();
-      });
-    });
-
     // Add row button
     const addBtn = document.createElement('button'); addBtn.className = 'pw-add-btn';
     addBtn.textContent = '+ Add credential'; addBtn.style.cssText = 'width:100%;background:none;border:none;border-top:1px solid var(--border);padding:8px;color:var(--ink-faint);font-size:11px;font-family:Verdana,sans-serif;cursor:pointer;transition:background 0.1s;';
@@ -4589,12 +4654,11 @@ function buildPwVault(el) {
     addBtn.addEventListener('mouseleave', () => { addBtn.style.background=''; addBtn.style.color='var(--ink-faint)'; });
     addBtn.addEventListener('click', () => {
       entries.push({ url: '', username: '', password: '' }); save(); render();
-      // Focus the first cell of the new row
-      setTimeout(() => {
-        const vals = wrap.querySelectorAll('.pw-cell-value');
-        const lastGroup = vals[vals.length - 3];
-        if (lastGroup) lastGroup.dispatchEvent(new MouseEvent('dblclick'));
-      }, 50);
+      // Focus the URL input of the new row after render settles
+      requestAnimationFrame(() => {
+        const inputs = wrap.querySelectorAll('input[type="text"]');
+        if (inputs.length) inputs[inputs.length - 2].focus(); // -2 = last row's URL input
+      });
     });
     wrap.appendChild(addBtn);
     // Attach column resize handles after DOM settles
@@ -5729,29 +5793,84 @@ renderTree = function() {
 };
 
 function renderRecentNotesSection() {
-  const tree = document.getElementById('tree');
-  const existing = tree.querySelector('#recent-notes-section');
-  if (existing) existing.remove();
-  if (!recentNotes.length || searchQuery || activeTagFilter) return;
-  // Validate recent notes still exist
+  // Recent notes are now shown in the topbar dropdown, not the sidebar
+  renderRecentDropdown();
+}
+
+function renderRecentDropdown() {
+  const btn = document.getElementById('recent-btn');
+  const drop = document.getElementById('recent-dropdown');
+  if (!btn || !drop) return;
+
+  // Validate recentNotes against currently loaded notebooks
   const valid = recentNotes.filter(r => {
     const nb = findNotebook(r.nbName);
     return nb?.notes.some(n => n.filename === r.filename);
   });
-  if (!valid.length) return;
-  const section = document.createElement('div'); section.id = 'recent-notes-section';
-  const hdr = document.createElement('div'); hdr.className = 'recent-header'; hdr.textContent = 'Recently Opened';
-  section.appendChild(hdr);
+
+  btn.disabled = !valid.length;
+  drop.innerHTML = '';
+
+  if (!valid.length) {
+    const empty = document.createElement('div');
+    empty.className = 'recent-drop-empty';
+    empty.textContent = 'No recently opened notes';
+    drop.appendChild(empty);
+    return;
+  }
+
   valid.forEach(r => {
     const nb = findNotebook(r.nbName);
     const note = nb?.notes.find(n => n.filename === r.filename);
     if (!note) return;
-    const item = makeNoteItem(note, r.nbName, true);
-    item.style.paddingLeft = '14px';
-    section.appendChild(item);
+    const item = document.createElement('div');
+    item.className = 'recent-drop-item';
+    item.innerHTML = `
+      <span class="recent-drop-icon">📄</span>
+      <div class="recent-drop-text">
+        <div class="recent-drop-title">${escHtml(r.title || note.title || 'Untitled')}</div>
+        <div class="recent-drop-nb">${escHtml(r.nbName || 'Root')}</div>
+      </div>`;
+    item.addEventListener('click', () => {
+      closeRecentDropdown();
+      openNote(nb, note, r.nbName);
+    });
+    drop.appendChild(item);
   });
-  tree.insertBefore(section, tree.firstChild);
+
+  const clearBtn = document.createElement('button');
+  clearBtn.id = 'recent-drop-clear';
+  clearBtn.textContent = 'Clear history';
+  clearBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    recentNotes = [];
+    localStorage.setItem('nota_recent', '[]');
+    closeRecentDropdown();
+    renderRecentDropdown();
+  });
+  drop.appendChild(clearBtn);
 }
+
+function closeRecentDropdown() {
+  document.getElementById('recent-wrap')?.classList.remove('open');
+}
+
+// Wire up the Recent button
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('recent-btn');
+  if (!btn) return;
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const wrap = document.getElementById('recent-wrap');
+    const wasOpen = wrap.classList.contains('open');
+    wrap.classList.toggle('open', !wasOpen);
+    if (!wasOpen) renderRecentDropdown();
+  });
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('recent-wrap');
+    if (wrap && !wrap.contains(e.target)) closeRecentDropdown();
+  });
+});
 
 // ══════════════════════════════════════════════════════
 // TABLE OF CONTENTS
