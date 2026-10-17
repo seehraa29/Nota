@@ -1209,6 +1209,7 @@
   </div>
   <button class="tb-btn" id="rename-btn" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Rename</button>
   <button class="tb-btn danger" id="delete-btn" disabled><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>Delete</button>
+  <button class="tb-btn" id="help-btn" title="About Nota">?</button>
   <div class="settings-wrap">
     <button class="tb-btn" id="settings-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings ▾</button>
     <div id="settings-menu">
@@ -2201,7 +2202,29 @@ function renderTree(){
   if(q){
     const all=getAllNotes().filter(n=>n.title.toLowerCase().includes(q)||plainText(n.body).toLowerCase().includes(q));
     if(!all.length){ tree.innerHTML='<div class="empty-list"><div class="big">🔍</div>No notes match.</div>'; return; }
-    all.forEach(n=>tree.appendChild(makeNoteItem(n,n.nbName,true)));
+    all.forEach(n=>{
+      const item = makeNoteItem(n,n.nbName,true);
+      // Add snippet showing matched context
+      const bodyText = plainText(n.body);
+      const idx = bodyText.toLowerCase().indexOf(q);
+      if(idx !== -1 && !n.title.toLowerCase().includes(q)) {
+        const start = Math.max(0, idx - 40);
+        const end = Math.min(bodyText.length, idx + q.length + 60);
+        let snippet = (start > 0 ? '…' : '') + bodyText.slice(start, end) + (end < bodyText.length ? '…' : '');
+        // Highlight the match within snippet
+        const matchStart = start > 0 ? idx - start + 1 : idx - start;
+        const hlSnippet = escHtml(snippet.slice(0, matchStart))
+          + '<mark style="background:rgba(192,57,43,0.2);color:var(--accent);border-radius:2px;padding:0 1px">'
+          + escHtml(snippet.slice(matchStart, matchStart + q.length))
+          + '</mark>'
+          + escHtml(snippet.slice(matchStart + q.length));
+        const snipEl = document.createElement('div');
+        snipEl.style.cssText = 'font-size:9.5px;color:var(--sidebar-subtext);font-family:Verdana,sans-serif;line-height:1.4;margin:2px 0 3px;padding-left:2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;';
+        snipEl.innerHTML = hlSnippet;
+        item.appendChild(snipEl);
+      }
+      tree.appendChild(item);
+    });
     return;
   }
 
@@ -4290,6 +4313,145 @@ document.addEventListener('keydown', e => {
 });
 
 // ══════════════════════════════════════════════════════
+// 1b. MARKDOWN LIVE SHORTCUTS
+// ══════════════════════════════════════════════════════
+
+(function(){
+  const body = document.getElementById('note-body');
+
+  // Get the block-level element containing the cursor
+  function getCursorBlock() {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+    let node = sel.getRangeAt(0).startContainer;
+    while (node && node !== body) {
+      if (node.nodeType === 1 && node.parentNode === body) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  // Get plain text of a node
+  function blockText(el) { return el ? el.textContent : ''; }
+
+  // Replace a block with a new element, placing cursor inside
+  function replaceBlock(old, newEl, cursorAtEnd) {
+    body.insertBefore(newEl, old);
+    old.remove();
+    const sel = window.getSelection();
+    const r = document.createRange();
+    if (newEl.childNodes.length) {
+      const last = newEl.lastChild;
+      if (cursorAtEnd && last.nodeType === Node.TEXT_NODE) {
+        r.setStart(last, last.length); r.collapse(true);
+      } else {
+        r.setStart(newEl, 0); r.collapse(true);
+      }
+    } else {
+      r.setStart(newEl, 0); r.collapse(true);
+    }
+    sel.removeAllRanges(); sel.addRange(r);
+  }
+
+  body.addEventListener('keydown', e => {
+    if (e.key !== ' ' && e.key !== 'Enter') return;
+    const block = getCursorBlock();
+    if (!block) return;
+    // Only trigger on plain paragraphs
+    if (block.tagName !== 'P' && block.tagName !== 'DIV') return;
+
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    if (!range.collapsed) return;
+
+    // Get text up to cursor
+    const preRange = document.createRange();
+    preRange.selectNodeContents(block);
+    preRange.setEnd(range.startContainer, range.startOffset);
+    const textBefore = preRange.toString();
+
+    // --- Heading: ## , ### , # (only on Space) ---
+    if (e.key === ' ') {
+      const hm = textBefore.match(/^(#{1,6})$/);
+      if (hm) {
+        e.preventDefault();
+        const lvl = hm[1].length;
+        const h = document.createElement('h' + lvl);
+        h.innerHTML = '<br>';
+        replaceBlock(block, h, false);
+        markUnsaved(); return;
+      }
+
+      // --- Unordered list: - or * or + ---
+      if (/^[-*+]$/.test(textBefore)) {
+        e.preventDefault();
+        const ul = document.createElement('ul');
+        const li = document.createElement('li'); li.innerHTML = '<br>';
+        ul.appendChild(li);
+        replaceBlock(block, ul, false);
+        const r2 = document.createRange();
+        r2.setStart(li, 0); r2.collapse(true);
+        sel.removeAllRanges(); sel.addRange(r2);
+        markUnsaved(); return;
+      }
+
+      // --- Ordered list: 1. ---
+      if (/^1\.$/.test(textBefore)) {
+        e.preventDefault();
+        const ol = document.createElement('ol');
+        const li = document.createElement('li'); li.innerHTML = '<br>';
+        ol.appendChild(li);
+        replaceBlock(block, ol, false);
+        const r2 = document.createRange();
+        r2.setStart(li, 0); r2.collapse(true);
+        sel.removeAllRanges(); sel.addRange(r2);
+        markUnsaved(); return;
+      }
+
+      // --- Blockquote: > ---
+      if (/^>$/.test(textBefore)) {
+        e.preventDefault();
+        const bq = document.createElement('blockquote'); bq.innerHTML = '<br>';
+        replaceBlock(block, bq, false);
+        markUnsaved(); return;
+      }
+    }
+
+    // --- Horizontal rule: --- or *** or ___ on Enter ---
+    if (e.key === 'Enter' && /^(---|\*\*\*|___)$/.test(textBefore.trim())) {
+      e.preventDefault();
+      const hr = document.createElement('hr');
+      const p = document.createElement('p'); p.innerHTML = '<br>';
+      body.insertBefore(hr, block);
+      body.insertBefore(p, block);
+      block.remove();
+      const r2 = document.createRange();
+      r2.setStart(p, 0); r2.collapse(true);
+      sel.removeAllRanges(); sel.addRange(r2);
+      markUnsaved(); return;
+    }
+
+    // --- Code block: ```lang on Enter ---
+    if (e.key === 'Enter') {
+      const cm = textBefore.match(/^```(\w*)$/);
+      if (cm) {
+        e.preventDefault();
+        const widget = buildCodeWidget(cm[1] || '', '');
+        const p = document.createElement('p'); p.innerHTML = '<br>';
+        body.insertBefore(widget, block);
+        body.insertBefore(p, block);
+        block.remove();
+        // Focus the widget textarea
+        const ta = widget.querySelector('textarea');
+        if (ta) { widget.querySelector('.code-widget-edit')?.click(); }
+        markUnsaved(); return;
+      }
+    }
+  });
+})();
+
+// ══════════════════════════════════════════════════════
 // 2. FIND & REPLACE
 // ══════════════════════════════════════════════════════
 let findMatches = [], findIdx = 0;
@@ -4769,6 +4931,32 @@ document.getElementById('note-body').addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
     e.preventDefault();
     window.print();
+  }
+
+  // Fix: if cursor is at very start of note and first child is a code-widget,
+  // ArrowUp or Backspace inserts a blank paragraph before it so you can type above it
+  if (e.key === 'ArrowUp' || e.key === 'Backspace') {
+    const body = document.getElementById('note-body');
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    // Check cursor is at absolute start
+    const atStart = range.collapsed &&
+      (range.startOffset === 0) &&
+      (range.startContainer === body || range.startContainer === body.firstChild ||
+       (body.firstChild && range.startContainer === body.firstChild.firstChild));
+    if (!atStart) return;
+    const firstEl = body.firstElementChild;
+    if (firstEl && firstEl.classList.contains('code-widget')) {
+      e.preventDefault();
+      const p = document.createElement('p'); p.innerHTML = '<br>';
+      body.insertBefore(p, firstEl);
+      // Move cursor into the new paragraph
+      const r = document.createRange();
+      r.setStart(p, 0); r.collapse(true);
+      sel.removeAllRanges(); sel.addRange(r);
+      markUnsaved();
+    }
   }
 });
 
@@ -6723,6 +6911,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('sm-three-panel');
   if (btn) btn.innerHTML = '<span>⫴</span> ' + (threePanelActive ? 'Exit Three-Panel View' : 'Three-Panel View');
 }, { once: true });
+
+// ══════════════════════════════════════════════════════
+// ABOUT / HELP MODAL
+// ══════════════════════════════════════════════════════
+document.getElementById('help-btn').addEventListener('click', () => {
+  if (document.getElementById('about-modal')) return;
+  const bd = document.createElement('div'); bd.className = 'modal-backdrop'; bd.id = 'about-modal';
+  bd.innerHTML = `
+    <div class="modal" style="max-width:420px;text-align:center">
+      <div style="font-size:36px;margin-bottom:4px">📓</div>
+      <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px">No<span style="color:var(--accent)">ta</span></h2>
+      <p style="font-size:11px;color:var(--ink-faint);font-family:'JetBrains Mono',monospace;margin-bottom:18px">offline-first notes · single HTML file</p>
+      <div style="background:var(--hover);border:1px solid var(--border);border-radius:8px;padding:14px 18px;text-align:left;margin-bottom:18px;font-family:Verdana,sans-serif;font-size:12px;line-height:1.7;color:var(--ink-soft)">
+        <div style="margin-bottom:8px"><strong style="color:var(--ink)">What is Nota?</strong><br>
+        A self-contained notes app that runs entirely in your browser. Notes are saved as plain HTML files in a folder you choose — no server, no account, no cloud required.</div>
+        <div><strong style="color:var(--ink)">Key features</strong><br>
+        Rich editor · Notebooks &amp; sub-notebooks · Tags · Full-text search · Code blocks · Tables · Markdown import · Three-panel view · 8 themes · Offline-first</div>
+      </div>
+      <div style="background:var(--hover);border:1px solid var(--border);border-radius:8px;padding:12px 18px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <span>📖 Documentation &amp; source</span>
+        <a href="https://github.com/seehraa29/Nota" target="_blank" rel="noopener"
+           style="color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap;border:1px solid var(--accent);border-radius:5px;padding:4px 10px;transition:background 0.12s"
+           onmouseover="this.style.background='rgba(139,123,248,0.12)'" onmouseout="this.style.background='none'">
+          GitHub →
+        </a>
+      </div>
+      <div style="font-size:11px;color:var(--ink-faint);margin-bottom:18px;font-family:Verdana,sans-serif">
+        <strong style="color:var(--ink-soft)">Quick tips</strong><br>
+        <span style="display:inline-block;margin-top:6px;line-height:1.9">
+          Type <code style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:0 4px;font-size:10px">#</code> + <kbd style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:10px">Space</kbd> for a heading &nbsp;·&nbsp;
+          <code style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:0 4px;font-size:10px">-</code> + <kbd style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:10px">Space</kbd> for a list<br>
+          <code style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:0 4px;font-size:10px">[[</code> to link notes &nbsp;·&nbsp;
+          <code style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:0 4px;font-size:10px">#tag</code> to tag a note &nbsp;·&nbsp;
+          <kbd style="background:var(--hover);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:10px">F11</kbd> for zen mode
+        </span>
+      </div>
+      <button id="about-close" class="primary" style="width:100%">Got it</button>
+    </div>`;
+  document.body.appendChild(bd);
+  bd.querySelector('#about-close').addEventListener('click', () => bd.remove());
+  bd.addEventListener('click', e => { if (e.target === bd) bd.remove(); });
+});
 
 </script>
 </body>
