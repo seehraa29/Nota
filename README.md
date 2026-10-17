@@ -59,6 +59,7 @@ Notes are grouped into **notebooks**. Notebooks can have one level of **sub-note
 
 - **Notebook:** New Note, Rename, Change Icon, Set Colour, Delete
 - **Note:** Pin/Unpin, Rename, Move to Notebook, Duplicate, Export as Markdown, Delete
+- **Templates:** Create Note based on pre-defined templates
 
 ### Tags
 
