@@ -22,11 +22,11 @@
   }
   body.theme-dark {
     --bg: #1c1e24; --paper: #22252e; --sidebar: #13151a;
-    --ink: #d4d8e8; --ink-soft: #7c8396; --ink-faint: #3e4355;
-    --accent: #7c6af7; --accent2: #f0a87c; --border: #2d3040;
-    --hover: rgba(124,106,247,0.09); --active: rgba(124,106,247,0.18);
+    --ink: #e8ecf8; --ink-soft: #9ca8c0; --ink-faint: #4e5570;
+    --accent: #8b7bf8; --accent2: #f5b88a; --border: #2d3040;
+    --hover: rgba(139,123,248,0.11); --active: rgba(139,123,248,0.22);
     --shadow: 0 4px 24px rgba(0,0,0,0.4); --sidebar-border: #1e2028;
-    --sidebar-text: #c8cede; --sidebar-subtext: #6e7590; --topbar-bg: #0f1015;
+    --sidebar-text: #eef0f8; --sidebar-subtext: #8892aa; --topbar-bg: #0f1015;
   }
   body.theme-ocean {
     --bg: #e8f0f5; --paper: #f4f8fc; --sidebar: #1a2c3d;
@@ -60,6 +60,139 @@
     --shadow: 0 4px 24px rgba(0,0,0,0.12); --sidebar-border: #2a2a2a;
     --sidebar-text: #eeeeee; --sidebar-subtext: #909090; --topbar-bg: #111111;
   }
+  body.theme-warm {
+    --bg: #1e1912; --paper: #252016; --sidebar: #131009;
+    --ink: #f0e8d8; --ink-soft: #b8a888; --ink-faint: #5a5040;
+    --accent: #e8a040; --accent2: #88c870; --border: #3a3020;
+    --hover: rgba(232,160,64,0.10); --active: rgba(232,160,64,0.20);
+    --shadow: 0 4px 24px rgba(0,0,0,0.5); --sidebar-border: #1e1808;
+    --sidebar-text: #f0e8d8; --sidebar-subtext: #9a8868; --topbar-bg: #0e0c06;
+  }
+  body.theme-hc {
+    --bg: #0a0a0a; --paper: #111111; --sidebar: #000000;
+    --ink: #f8f8f8; --ink-soft: #cccccc; --ink-faint: #666666;
+    --accent: #ffcc00; --accent2: #66ccff; --border: #333333;
+    --hover: rgba(255,204,0,0.12); --active: rgba(255,204,0,0.24);
+    --shadow: 0 4px 24px rgba(0,0,0,0.8); --sidebar-border: #222222;
+    --sidebar-text: #ffffff; --sidebar-subtext: #aaaaaa; --topbar-bg: #000000;
+  }
+
+  /* ── COMPACT SIDEBAR ── */
+  body.sidebar-compact #search-wrap { padding: 7px 8px 6px; }
+  body.sidebar-compact #search { padding: 5px 10px 5px 28px; font-size: 11px; }
+  body.sidebar-compact #sort-bar { padding: 3px 8px; gap: 3px; }
+  body.sidebar-compact .sort-btn { font-size: 8.5px; padding: 1px 5px; }
+  body.sidebar-compact .nb-row { height: 24px; padding: 0 6px 0 4px; margin: 0px 4px; }
+  body.sidebar-compact .nb-name { font-size: 11px; }
+  body.sidebar-compact .nb-count { font-size: 8px; padding: 1px 4px; }
+  body.sidebar-compact .nb-icon { font-size: 12px; margin-right: 4px; }
+  body.sidebar-compact .note-item { padding: 2px 6px 2px 28px; margin: 0px 4px 0px 6px; }
+  body.sidebar-compact .note-item-title { font-size: 11px; }
+  body.sidebar-compact .note-item-date { font-size: 9px; }
+  body.sidebar-compact #sidebar-btns { padding: 6px; gap: 4px; }
+  body.sidebar-compact .sb-btn { padding: 6px 4px; font-size: 10px; gap: 4px; }
+  body.sidebar-compact .root-notes-header { padding: 5px 10px 2px; font-size: 8.5px; }
+  body.sidebar-compact .nb-notes::before { left: 17px; }
+  body.sidebar-compact .nb-chevron { width: 14px; height: 14px; }
+
+  /* ── THREE-PANEL MODE ── */
+  #nb-panel-footer {
+    display: none;
+    padding: 6px 8px;
+    border-top: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+  }
+  body.three-panel #nb-panel-footer { display: block; }
+  #nb-panel-add-nb {
+    width: 100%; background: rgba(255,255,255,0.06); color: var(--sidebar-text);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+    padding: 6px 8px; font-family: Verdana, sans-serif; font-size: 11px;
+    font-weight: 600; cursor: pointer; transition: background 0.12s;
+  }
+  #nb-panel-add-nb:hover { background: rgba(255,255,255,0.12); }
+
+  #notes-panel {
+    display: none;
+    width: var(--notes-panel-w, 240px);
+    background: var(--sidebar);
+    flex-direction: column;
+    flex-shrink: 0;
+    border-right: 1px solid var(--sidebar-border);
+    overflow: hidden;
+  }
+  body.three-panel #notes-panel { display: flex; }
+
+  /* In three-panel, sidebar shows ONLY notebooks — hide notes & search */
+  body.three-panel #sidebar { width: var(--nb-panel-w, 200px); }
+  body.three-panel #search-wrap { display: none; }
+  body.three-panel #sort-bar { display: none !important; }
+  body.three-panel #sidebar-btns { display: none; }
+  body.three-panel .nb-notes { display: none !important; }
+  body.three-panel .nb-row { border-radius: 6px; }
+  body.three-panel .nb-count { display: flex !important; }
+  body.three-panel .nb-add-btn { display: none !important; }
+
+  /* Notes panel internals */
+  #notes-panel-header {
+    padding: 8px 10px 6px;
+    border-bottom: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+  }
+  #notes-panel-title {
+    font-size: 11px; font-weight: 700; color: var(--sidebar-text);
+    font-family: Verdana, sans-serif; letter-spacing: 0.02em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 6px;
+  }
+  #notes-panel-search {
+    width: 100%; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+    padding: 5px 10px 5px 28px; color: var(--sidebar-text);
+    font-family: Verdana, sans-serif; font-size: 11px; outline: none;
+    transition: border-color 0.15s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23998f84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: 8px center;
+  }
+  #notes-panel-search::placeholder { color: rgba(255,255,255,0.3); }
+  #notes-panel-search:focus { border-color: rgba(255,255,255,0.25); }
+  #notes-panel-sort {
+    display: flex; gap: 3px; padding: 4px 8px 4px;
+    border-bottom: 1px solid var(--sidebar-border); flex-shrink: 0;
+    background: rgba(255,255,255,0.02);
+  }
+  #notes-panel-sort .sort-btn { font-size: 8.5px; padding: 1px 5px; }
+  #notes-panel-list {
+    flex: 1; overflow-y: auto; padding: 4px 0;
+  }
+  #notes-panel-list::-webkit-scrollbar { width: 4px; }
+  #notes-panel-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  #notes-panel-footer {
+    padding: 6px 8px; border-top: 1px solid var(--sidebar-border); flex-shrink: 0;
+  }
+  #notes-panel-add {
+    width: 100%; background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 7px 8px; font-family: Verdana, sans-serif;
+    font-size: 11px; font-weight: 600; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 5px;
+    transition: filter 0.12s;
+  }
+  #notes-panel-add:hover { filter: brightness(1.12); }
+  #notes-panel-add:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  #notes-panel-resizer {
+    width: 4px; background: var(--sidebar-border); cursor: col-resize;
+    flex-shrink: 0; display: none; transition: background 0.15s;
+    position: relative;
+  }
+  body.three-panel #notes-panel-resizer { display: block; }
+  #notes-panel-resizer:hover, #notes-panel-resizer.dragging { background: var(--accent); }
+
+  /* In three-panel, sidebar gets its own resizer renamed semantically */
+  body.three-panel #sidebar-resizer { display: block; }
+
+  /* Notebook panel active highlight in 3-panel */
+  body.three-panel .nb-row.tp-active { background: var(--active); border-color: rgba(255,255,255,0.18); }
+  body.three-panel .nb-row.tp-active .nb-name { color: #fff; }
 
   /* ── SETTINGS DROPDOWN ── */
   .settings-wrap { position: relative; }
@@ -235,12 +368,15 @@
   .fd-sep { height: 1px; background: var(--border); margin: 5px 0; }
   #md-import-label { width: 30px; height: 30px; border: none; background: none; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 10px; font-weight: 700; transition: all 0.1s; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.05em; }
   #md-import-label:hover { background: var(--hover); color: var(--ink); }
+  #md-paste-textarea { width: 100%; min-height: 280px; max-height: 55vh; resize: vertical; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; padding: 10px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.15s; margin-top: 10px; tab-size: 2; }
+  #md-paste-textarea:focus { border-color: var(--accent); }
+  #md-paste-textarea::placeholder { color: var(--ink-faint); font-style: italic; }
 
   /* ── NOTE BODY ── */
   #note-body-wrap { 
     flex: 1; 
     overflow-y: auto; 
-    padding: 20px 28px 40px;
+    padding: 20px 0 0 0;
     min-height: 0;
   }
   #note-body-wrap::-webkit-scrollbar { width: 8px; }
@@ -256,6 +392,8 @@
     line-height: 1.8; 
     color: var(--ink); 
     word-break: break-word;
+    padding: 0 40px 40px 40px;
+    max-width: 860px;
   }
   #note-body h1 { font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 22px; font-weight: 700; margin: 20px 0 10px; color: var(--ink); }
   #note-body h2 { font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 18px; font-weight: 700; margin: 16px 0 8px; color: var(--ink); }
@@ -512,11 +650,6 @@
 
   /* ── EDITOR CONTENT AREA ── */
   #editor-content-area { flex: 1; display: flex; flex-direction: row; overflow: hidden; min-height: 0; }
-  #note-body-wrap { flex: 1; overflow-y: auto; padding: 20px 28px 40px; min-height: 0; }
-  #note-body-wrap::-webkit-scrollbar { width: 8px; }
-  #note-body-wrap::-webkit-scrollbar-track { background: var(--border); border-radius: 4px; }
-  #note-body-wrap::-webkit-scrollbar-thumb { background: var(--ink-soft); border-radius: 4px; }
-  #note-body-wrap::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
   .nb-children { display: none; padding-left: 14px; }
   .nb-children.open { display: block; }
@@ -528,7 +661,7 @@
   .nb-row:hover .nb-add-subnb-btn { display: flex; }
   .nb-add-subnb-btn:hover { color: #fdfbf7; }
   /* Drag-over highlight for both nb-notes and nb-children */
-  .nb-notes.drag-over-nb, .nb-children.drag-over-nb { background: rgba(192,57,43,0.06); outline: 1px dashed var(--accent); outline-offset: -2px; border-radius: 4px; }
+  .nb-notes.drag-over-nb, .nb-children.drag-over-nb, .nb-row.drag-over-nb { background: rgba(192,57,43,0.06); outline: 1px dashed var(--accent); outline-offset: -2px; border-radius: 4px; }
 
   /* ── SIDEBAR RESIZE ── */
   #sidebar-resizer {
@@ -587,7 +720,7 @@
   body.zen-mode #sidebar { display: none; }
   body.zen-mode #sidebar-resizer { display: none; }
   body.zen-mode #editor-pane { border-left: none; }
-  body.zen-mode #note-body-wrap { padding: 40px min(10vw, 120px); }
+  body.zen-mode #note-body { padding: 40px min(10vw, 120px) 80px; max-width: none; }
   body.zen-mode #fmt-toolbar { display: none; }
   body.zen-mode #editor-header { padding: 24px min(10vw, 120px) 0; }
   body.zen-mode #editor-meta { padding: 4px min(10vw, 120px) 0; }
@@ -680,8 +813,7 @@
   .tag-chip:hover { background: var(--hover); }
   #tags-panel { padding: 6px 14px 4px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
   #tags-panel-label { font-size: 9px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; margin-right: 4px; letter-spacing: 0.06em; }
-  #tags-filter-bar { padding: 5px 10px; border-top: 1px solid var(--sidebar-border); display: none; flex-wrap: wrap; gap: 4px; align-items: center; flex-shrink: 0; }
-  #tags-filter-bar.visible { display: flex; }
+  #tags-filter-bar { display: none !important; }
   .tag-filter-chip { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.07);
     color: var(--sidebar-subtext); border-radius: 4px; padding: 2px 7px; font-size: 10px;
     font-family: 'JetBrains Mono', monospace; cursor: pointer; border: 1px solid transparent; transition: all 0.1s; }
@@ -760,8 +892,9 @@
   #wc-goal-bar { height: 2px; background: var(--border); flex-shrink: 0; }
   #wc-goal-progress { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; border-radius: 1px; }
 
-  /* ── EDITOR CONTENT AREA (needs position:relative for history panel) ── */
-  #note-body-wrap { flex: 1; overflow-y: auto; padding: 20px 28px 40px; min-height: 0; position: relative; }
+  /* ── EDITOR CONTENT AREA (position:relative stays on #editor-content-area, NOT on the scrollable wrap) ── */
+  /* Removing position:relative from #note-body-wrap prevents absolutely-positioned panels (history, TOC)
+     from re-anchoring to the scroll container, which caused content to zig-zag in Chromium when scrolled. */
 
   /* ── TAG INLINE IN BODY ── */
   #note-body .nota-tag { color: var(--accent); font-weight: 600; cursor: pointer; }
@@ -1083,7 +1216,10 @@
       <div class="sm-themes" id="theme-grid"></div>
       <div class="sm-sep"></div>
       <button class="sm-item" id="sm-export"><span>↓</span> Export / Import…</button>
+      <button class="sm-item" id="sm-bulk-md-import"><span>📥</span> Bulk Import Markdown…</button>
       <button class="sm-item" id="sm-sidebar-toggle"><span>⇄</span> Swap Sidebar Side</button>
+      <button class="sm-item" id="sm-compact-sidebar"><span>⊞</span> Compact Sidebar</button>
+      <button class="sm-item" id="sm-three-panel"><span>⫴</span> Three-Panel View</button>
       <div class="sm-sep"></div>
       <button class="sm-item" id="sm-encryption"><span>🔒</span> <span id="sm-enc-label">Folder Encryption…</span></button>
       <div class="sm-sep"></div>
@@ -1103,7 +1239,7 @@
 
 <div id="app">
   <div id="sidebar">
-    <div id="search-wrap"><input type="text" id="search" placeholder="Search all notes…" autocomplete="off"></div>
+    <div id="search-wrap"><input type="text" id="search" placeholder="Search notes… (use #tag to filter by tag)" autocomplete="off"></div>
     <div id="sort-bar">
       <span id="sort-bar-label">Sort:</span>
       <button class="sort-btn" data-sort="date-desc">Date ↓</button>
@@ -1112,13 +1248,31 @@
       <button class="sort-btn" data-sort="alpha-desc">Z→A</button>
     </div>
     <div id="tree"></div>
-    <div id="tags-filter-bar"><span style="font-size:9px;color:var(--sidebar-subtext);font-family:'JetBrains Mono',monospace;margin-right:4px;white-space:nowrap;flex-shrink:0">🏷 Tags:</span><div id="tag-filter-chips" style="display:flex;flex-wrap:wrap;gap:3px;flex:1"></div><button id="tag-filter-clear">✕ Clear</button></div>
     <div id="sidebar-btns">
       <button class="sb-btn" id="add-notebook-btn" disabled><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Notebook</button>
       <button class="sb-btn primary" id="add-note-btn" disabled><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Note</button>
     </div>
+    <div id="nb-panel-footer">
+      <button id="nb-panel-add-nb">📁 New Notebook</button>
+    </div>
   </div>
-  <div id="sidebar-resizer" title="Drag to resize sidebar"></div>
+  <div id="sidebar-resizer" title="Drag to resize notebook panel"></div>
+  <div id="notes-panel">
+    <div id="notes-panel-header">
+      <div id="notes-panel-title">Select a notebook</div>
+      <input type="text" id="notes-panel-search" placeholder="Search notes…" autocomplete="off">
+    </div>
+    <div id="notes-panel-sort">
+      <span class="sort-btn" id="np-sort-label" style="border:none;cursor:default;padding:1px 0;color:var(--sidebar-subtext)">Sort:</span>
+      <button class="sort-btn np-sort-btn active" data-sort="date-desc">Date ↓</button>
+      <button class="sort-btn np-sort-btn" data-sort="alpha-asc">A→Z</button>
+    </div>
+    <div id="notes-panel-list"></div>
+    <div id="notes-panel-footer">
+      <button id="notes-panel-add" disabled>＋ New Note</button>
+    </div>
+  </div>
+  <div id="notes-panel-resizer" title="Drag to resize notes panel"></div>
 
   <div id="no-folder-state">
     <div class="es-icon">📁</div>
@@ -1187,6 +1341,7 @@
       <div class="fmt-sep"></div>
       <label id="media-insert-label" class="fmt-btn" title="Insert Image or Video" style="cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><input type="file" id="media-insert-input" accept="image/*,video/*" style="display:none" multiple></label>
       <label id="md-import-label" title="Import Markdown file">.md<input type="file" id="md-import-input" accept=".md,.markdown,text/markdown" style="display:none"></label>
+      <button class="fmt-btn" id="md-paste-btn" title="Paste Markdown text" style="font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:-0.04em;width:36px">📋md</button>
       <div class="fmt-sep"></div>
       <label class="fmt-btn" title="Attach files to this note" style="cursor:pointer" id="attach-toolbar-label">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
@@ -2072,6 +2227,20 @@ function renderTree(){
 
       row.addEventListener('click',e=>{
         if(e.target.closest('.nb-add-btn')||e.target.closest('.nb-add-subnb-btn')) return;
+        if(threePanelActive){
+          // Three-panel: select notebook AND toggle expand/collapse
+          // (nb-add-subnb-btn is already guarded above by e.target.closest check)
+          threePanelNb = nb.fullName||nb.name;
+          document.querySelectorAll('#tree .nb-row').forEach(r=>r.classList.remove('tp-active'));
+          row.classList.add('tp-active');
+          renderNotesPanel();
+          nb.open=!nb.open;
+          row.classList.toggle('open',nb.open);
+          notesDiv.classList.toggle('open',nb.open);
+          childrenDiv.classList.toggle('open',nb.open);
+          saveOpenNBs();
+          return;
+        }
         nb.open=!nb.open;
         row.classList.toggle('open',nb.open);
         notesDiv.classList.toggle('open',nb.open);
@@ -2088,7 +2257,7 @@ function renderTree(){
       if(nb.notes.length===0&&nb.open&&(nb.children||[]).length===0){
         const emp=document.createElement('div'); emp.style.cssText='padding:4px 10px 4px 32px;font-size:10px;color:#9e9388;font-style:italic'; emp.textContent='Empty notebook'; notesDiv.appendChild(emp);
       }
-      attachDropTarget(notesDiv, nb);
+      attachDropTarget(notesDiv, nb, row);
 
       // Sub-notebooks
       (nb.children||[]).forEach(sub=>{
@@ -2099,6 +2268,13 @@ function renderTree(){
 
         subRow.addEventListener('click',e=>{
           if(e.target.closest('.nb-add-btn')) return;
+          if(threePanelActive){
+            threePanelNb = sub.fullName||sub.name;
+            document.querySelectorAll('#tree .nb-row').forEach(r=>r.classList.remove('tp-active'));
+            subRow.classList.add('tp-active');
+            renderNotesPanel();
+            return; // sub-notebooks don't expand further
+          }
           sub.open=!sub.open;
           subRow.classList.toggle('open',sub.open);
           subNotesDiv.classList.toggle('open',sub.open);
@@ -2111,7 +2287,7 @@ function renderTree(){
         if(sub.notes.length===0&&sub.open){
           const emp=document.createElement('div'); emp.style.cssText='padding:4px 10px 4px 32px;font-size:10px;color:#9e9388;font-style:italic'; emp.textContent='Empty notebook'; subNotesDiv.appendChild(emp);
         }
-        attachDropTarget(subNotesDiv, sub);
+        attachDropTarget(subNotesDiv, sub, subRow);
         childrenDiv.appendChild(subRow);
         childrenDiv.appendChild(subNotesDiv);
       });
@@ -2121,6 +2297,13 @@ function renderTree(){
       if((nb.children||[]).length>0) tree.appendChild(childrenDiv);
     }
   });
+  // Three-panel: highlight selected notebook and refresh notes panel
+  if(threePanelActive){
+    document.querySelectorAll('#tree .nb-row').forEach(r => {
+      r.classList.toggle('tp-active', !!threePanelNb && r.dataset.nbname === threePanelNb);
+    });
+    renderNotesPanel();
+  }
 }
 
 // Build a notebook row element
@@ -2134,6 +2317,7 @@ function makeNbRow(nb, isSub){
   const isActive = activeNotebookName===(nb.fullName||nb.name)&&!activeFilename;
   const row=document.createElement('div');
   row.className='nb-row'+(nb.open?' open':'')+(isActive?' active-nb':'')+(isSub?' sub-nb':'');
+  row.dataset.nbname = nb.fullName||nb.name||'';
 
   const childCount = (nb.children||[]).length;
   const totalCount = nb.notes.length + (nb.children||[]).reduce((s,c)=>s+c.notes.length,0);
@@ -2144,25 +2328,30 @@ function makeNbRow(nb, isSub){
 }
 
 // Attach drag-drop target to a notes container div
-function attachDropTarget(notesDiv, targetNb){
-  notesDiv.addEventListener('dragover',e=>{
-    e.preventDefault(); e.stopPropagation();
-    e.dataTransfer.dropEffect='move';
-    notesDiv.classList.add('drag-over-nb');
-  });
-  notesDiv.addEventListener('dragleave',e=>{
-    if(!notesDiv.contains(e.relatedTarget)) notesDiv.classList.remove('drag-over-nb');
-  });
-  notesDiv.addEventListener('drop',async e=>{
-    e.preventDefault(); e.stopPropagation();
-    notesDiv.classList.remove('drag-over-nb');
-    let data; try{ data=JSON.parse(e.dataTransfer.getData('text/plain')); }catch(ex){ return; }
-    const { filename, fromNb } = data;
-    const fromNbName = fromNb;
-    const toNbName = targetNb.fullName||targetNb.name;
-    if(fromNbName===toNbName) return;
-    await moveNote(filename, fromNbName, toNbName);
-  });
+function attachDropTarget(notesDiv, targetNb, rowEl){
+  // In three-panel mode we attach to the notebook row itself (notesDiv is hidden)
+  function addDrop(el){
+    el.addEventListener('dragover',e=>{
+      e.preventDefault(); e.stopPropagation();
+      e.dataTransfer.dropEffect='move';
+      el.classList.add('drag-over-nb');
+    });
+    el.addEventListener('dragleave',e=>{
+      if(!el.contains(e.relatedTarget)) el.classList.remove('drag-over-nb');
+    });
+    el.addEventListener('drop',async e=>{
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('drag-over-nb');
+      let data; try{ data=JSON.parse(e.dataTransfer.getData('text/plain')); }catch(ex){ return; }
+      const { filename, fromNb } = data;
+      const toNbName = targetNb.fullName||targetNb.name||null;
+      if(fromNb===toNbName) return;
+      await moveNote(filename, fromNb, toNbName);
+      renderNotesPanel();
+    });
+  }
+  addDrop(notesDiv);           // always attach to notesDiv (two-panel)
+  if(rowEl) addDrop(rowEl);    // also attach to the row for three-panel drag targets
 }
 
 async function addSubNotebook(parentNb){
@@ -2317,6 +2506,7 @@ function buildCodeWidget(lang, rawCode){
   // Render highlighted code into display
   function renderHighlight(){
     const code = textarea.value || rawCode;
+    if(typeof hljs === 'undefined'){ display.textContent = code; return; }
     let html, detectedLang = lang;
     if(lang && hljs.getLanguage(lang)){
       const r = hljs.highlight(code, {language: lang, ignoreIllegals: true});
@@ -2509,6 +2699,55 @@ function markUnsaved(){
 }
 
 // deleteCurrentNote is defined later with undo support
+
+async function renameNoteByRef(nb, note, nbName){
+  const newTitle = prompt('Rename note:', note.title||'');
+  if (newTitle === null) return;
+  const oldHandle = note.handle, oldFilename = note.filename;
+  const base = slugify(newTitle); let newFilename = base+'.html', c = 1;
+  while(nb.notes.some(n=>n.filename===newFilename&&n.filename!==oldFilename)) newFilename=`${base}-${c++}.html`;
+  note.title = newTitle.trim(); note.filename = newFilename; note.updated = Date.now();
+  await writeToDisk(nb, note);
+  if(oldHandle) try{ await nb.dirHandle.removeEntry(oldFilename); }catch(e){}
+  if(activeFilename === oldFilename && activeNotebookName === nbName){
+    activeFilename = newFilename;
+    document.getElementById('note-title').value = note.title;
+    document.getElementById('meta-filename').textContent = newFilename;
+    updateMeta(note);
+  }
+  renderTree(); renderNotesPanel(); toast('Renamed to '+newFilename);
+}
+
+async function showMoveNoteModal(note, fromNbName){
+  const nbs = [];
+  notebooks.forEach(nb => {
+    if(nb.name===null){ nbs.push({label: dirHandle?.name||'Root', value: null}); }
+    else {
+      nbs.push({label: '📁 '+nb.name, value: nb.fullName||nb.name});
+      (nb.children||[]).forEach(sub => nbs.push({label: '　└ '+sub.name, value: sub.fullName}));
+    }
+  });
+  const opts = nbs.map(n=>`<option value="${escHtml(n.value??'__root__')}"${n.value===fromNbName||(!n.value&&!fromNbName)?' selected':''}>${escHtml(n.label)}</option>`).join('');
+  const bd = document.createElement('div'); bd.className='modal-backdrop';
+  bd.innerHTML = `<div class="modal"><h3>Move Note</h3>
+    <p style="font-family:Verdana,sans-serif;font-size:12px;color:var(--ink-soft);margin-bottom:12px">Move "<strong>${escHtml(note.title||'Untitled')}</strong>" to:</p>
+    <select id="move-nb-sel" style="width:100%;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--ink);font-size:12px;padding:0 8px">${opts}</select>
+    <div class="modal-actions" style="margin-top:14px">
+      <button id="move-cancel">Cancel</button>
+      <button id="move-ok" class="primary">Move</button>
+    </div></div>`;
+  document.body.appendChild(bd);
+  bd.querySelector('#move-cancel').addEventListener('click',()=>bd.remove());
+  bd.addEventListener('click',e=>{if(e.target===bd)bd.remove();});
+  bd.querySelector('#move-ok').addEventListener('click',async()=>{
+    let toNbName = bd.querySelector('#move-nb-sel').value;
+    if(toNbName==='__root__') toNbName = null;
+    bd.remove();
+    if(toNbName===fromNbName) return;
+    await moveNote(note.filename, fromNbName, toNbName);
+    renderNotesPanel();
+  });
+}
 
 async function renameCurrentNote(){
   if(!activeFilename||!dirHandle) return;
@@ -2888,7 +3127,8 @@ function attachAllTableResizeHandles() {
 
 document.getElementById('md-import-input').addEventListener('change',async function(){
   const file=this.files[0]; if(!file) return; this.value='';
-  const text=await file.text();
+  if(!activeFilename){ toast('Open a note first, then import.','info'); return; }
+  const text=(await file.text()).replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   const body=document.getElementById('note-body');
   const fragment=document.createDocumentFragment();
 
@@ -2926,6 +3166,72 @@ document.getElementById('md-import-input').addEventListener('change',async funct
   }
   markUnsaved();
   toast(`Imported ${file.name}`);
+});
+
+// ── PASTE MARKDOWN MODAL ──
+document.getElementById('md-paste-btn').addEventListener('click', () => {
+  if (!activeFilename) { toast('Open a note first.', 'info'); return; }
+  const bd = document.createElement('div'); bd.className = 'modal-backdrop';
+  bd.innerHTML = `<div class="modal wide">
+    <h3>📋 Paste Markdown</h3>
+    <p style="font-size:12px;color:var(--ink-soft);font-family:Verdana,sans-serif;margin-bottom:2px">
+      Paste or type Markdown below — it will be rendered and appended to the current note.
+    </p>
+    <textarea id="md-paste-textarea" placeholder="# Heading&#10;&#10;**Bold**, *italic*, \`code\`, tables, lists, fenced code blocks…" spellcheck="false" autofocus></textarea>
+    <div class="modal-actions" style="margin-top:12px">
+      <button id="md-paste-cancel">Cancel</button>
+      <button id="md-paste-go" class="primary">Insert as content</button>
+    </div>
+  </div>`;
+  document.body.appendChild(bd);
+  // Focus textarea
+  setTimeout(() => bd.querySelector('#md-paste-textarea').focus(), 60);
+
+  bd.querySelector('#md-paste-cancel').addEventListener('click', () => bd.remove());
+  bd.addEventListener('click', e => { if (e.target === bd) bd.remove(); });
+
+  bd.querySelector('#md-paste-go').addEventListener('click', () => {
+    const text = bd.querySelector('#md-paste-textarea').value;
+    if (!text.trim()) { bd.remove(); return; }
+
+    const body = document.getElementById('note-body');
+    const fragment = document.createDocumentFragment();
+
+    // Same logic as file import — handle fenced code blocks separately
+    const codeBlockRe = /^```(\w*)\n([\s\S]*?)^```/gm;
+    let lastIndex = 0, match;
+    while ((match = codeBlockRe.exec(text)) !== null) {
+      const before = text.slice(lastIndex, match.index);
+      if (before.trim()) {
+        const div = document.createElement('div');
+        div.innerHTML = markdownToHTML(before);
+        while (div.firstChild) fragment.appendChild(div.firstChild);
+      }
+      fragment.appendChild(buildCodeWidget(match[1] || '', match[2].trim()));
+      const p = document.createElement('p'); p.innerHTML = '<br>';
+      fragment.appendChild(p);
+      lastIndex = match.index + match[0].length;
+    }
+    const remaining = text.slice(lastIndex);
+    if (remaining.trim()) {
+      const div = document.createElement('div');
+      div.innerHTML = markdownToHTML(remaining);
+      while (div.firstChild) fragment.appendChild(div.firstChild);
+    }
+
+    if (!body.innerHTML.trim()) { body.innerHTML = ''; body.appendChild(fragment); }
+    else { const hr = document.createElement('hr'); body.appendChild(hr); body.appendChild(fragment); }
+
+    // If note title is empty, use first heading
+    const titleEl = document.getElementById('note-title');
+    if (!titleEl.value.trim()) {
+      const firstH = body.querySelector('h1,h2,h3');
+      if (firstH) titleEl.value = firstH.textContent.trim();
+    }
+    markUnsaved();
+    toast('Markdown inserted');
+    bd.remove();
+  });
 });
 
 // Full markdown → HTML converter
@@ -3319,12 +3625,14 @@ function showExportModal() {
 // ══════════════════════════════════════════════════════
 
 const THEMES = [
-  { id: '',       label: 'Parchment', swatch: '#f5f0e8', side: '#1a1814' },
-  { id: 'dark',   label: 'Dark Slate', swatch: '#22252e', side: '#13151a' },
-  { id: 'ocean',  label: 'Ocean',     swatch: '#e8f0f5', side: '#1a2c3d' },
-  { id: 'forest', label: 'Forest',    swatch: '#eaf2ec', side: '#1a2e1c' },
-  { id: 'rose',   label: 'Rose',      swatch: '#fdf0f3', side: '#2e1820' },
-  { id: 'mono',   label: 'Mono',      swatch: '#f0f0f0', side: '#1a1a1a' },
+  { id: '',       label: 'Parchment',   swatch: '#f5f0e8', side: '#1a1814' },
+  { id: 'dark',   label: 'Dark Slate',  swatch: '#22252e', side: '#13151a' },
+  { id: 'warm',   label: 'Dark Warm',   swatch: '#252016', side: '#131009' },
+  { id: 'hc',     label: 'High Contrast', swatch: '#111111', side: '#000000' },
+  { id: 'ocean',  label: 'Ocean',       swatch: '#e8f0f5', side: '#1a2c3d' },
+  { id: 'forest', label: 'Forest',      swatch: '#eaf2ec', side: '#1a2e1c' },
+  { id: 'rose',   label: 'Rose',        swatch: '#fdf0f3', side: '#2e1820' },
+  { id: 'mono',   label: 'Mono',        swatch: '#f0f0f0', side: '#1a1a1a' },
 ];
 
 let activeTheme = localStorage.getItem('nota_theme') || '';
@@ -3373,6 +3681,20 @@ document.getElementById('sm-sidebar-toggle').addEventListener('click', () => {
   localStorage.setItem('nota_sidebar_side', side);
   saveSettingsFile();
 });
+
+document.getElementById('sm-compact-sidebar').addEventListener('click', () => {
+  closeSettingsMenu();
+  const compact = document.body.classList.toggle('sidebar-compact');
+  localStorage.setItem('nota_sidebar_compact', compact ? '1' : '');
+  saveSettingsFile();
+  const btn = document.getElementById('sm-compact-sidebar');
+  if (btn) btn.textContent = (compact ? '✦ ' : '⊞ ') + (compact ? 'Normal Sidebar' : 'Compact Sidebar');
+});
+
+// Apply compact mode on load
+if (localStorage.getItem('nota_sidebar_compact') === '1') {
+  document.body.classList.add('sidebar-compact');
+}
 
 // Apply saved theme on load
 applyTheme(activeTheme);
@@ -4576,43 +4898,34 @@ function buildPwVault(el) {
       });
     };
 
-    const inpStyle = 'font-size:11px;font-family:"JetBrains Mono",monospace;border:1px solid var(--border);border-radius:3px;padding:2px 5px;width:100%;background:transparent;color:var(--ink);outline:none;box-sizing:border-box;';
-    const inpFocusStyle = 'border-color:var(--accent);';
-
     entries.forEach((entry, idx) => {
       const tr = document.createElement('tr');
 
-      // URL cell — always-visible plain input
+      // URL cell
       const tdUrl = document.createElement('td');
       const urlDiv = document.createElement('div'); urlDiv.className = 'pw-cell';
-      const urlInp = document.createElement('input'); urlInp.type = 'text';
-      urlInp.value = entry.url || ''; urlInp.placeholder = 'https://...';
-      urlInp.style.cssText = inpStyle;
-      urlInp.addEventListener('mousedown', ev => ev.stopPropagation());
-      urlInp.addEventListener('focus', () => { urlInp.style.borderColor = 'var(--accent)'; });
-      urlInp.addEventListener('blur', () => { urlInp.style.borderColor = ''; entries[idx].url = urlInp.value; save(); });
-      urlInp.addEventListener('keydown', ev => ev.stopPropagation());
+      const urlVal = document.createElement('span'); urlVal.className = 'pw-cell-value';
+      urlVal.textContent = entry.url || '';
+      urlVal.title = entry.url || '';
+      makeEditHandler(urlVal, 'url', idx);
       const urlCopy = document.createElement('button'); urlCopy.className = 'pw-copy-btn'; urlCopy.textContent = 'Copy';
-      urlCopy.addEventListener('click', () => copyVal(urlInp.value, urlCopy));
-      urlDiv.appendChild(urlInp); urlDiv.appendChild(urlCopy);
+      urlCopy.addEventListener('click', () => copyVal(entry.url, urlCopy));
+      urlDiv.appendChild(urlVal); urlDiv.appendChild(urlCopy);
       tdUrl.appendChild(urlDiv);
 
-      // Username cell — always-visible plain input
+      // Username cell
       const tdUser = document.createElement('td');
       const userDiv = document.createElement('div'); userDiv.className = 'pw-cell';
-      const userInp = document.createElement('input'); userInp.type = 'text';
-      userInp.value = entry.username || ''; userInp.placeholder = 'username';
-      userInp.style.cssText = inpStyle;
-      userInp.addEventListener('mousedown', ev => ev.stopPropagation());
-      userInp.addEventListener('focus', () => { userInp.style.borderColor = 'var(--accent)'; });
-      userInp.addEventListener('blur', () => { userInp.style.borderColor = ''; entries[idx].username = userInp.value; save(); });
-      userInp.addEventListener('keydown', ev => ev.stopPropagation());
+      const userVal = document.createElement('span'); userVal.className = 'pw-cell-value';
+      userVal.textContent = entry.username || '';
+      userVal.title = entry.username || '';
+      makeEditHandler(userVal, 'username', idx);
       const userCopy = document.createElement('button'); userCopy.className = 'pw-copy-btn'; userCopy.textContent = 'Copy';
-      userCopy.addEventListener('click', () => copyVal(userInp.value, userCopy));
-      userDiv.appendChild(userInp); userDiv.appendChild(userCopy);
+      userCopy.addEventListener('click', () => copyVal(entry.username, userCopy));
+      userDiv.appendChild(userVal); userDiv.appendChild(userCopy);
       tdUser.appendChild(userDiv);
 
-      // Password cell — hidden by default, click span to edit (existing behaviour)
+      // Password cell
       const tdPw = document.createElement('td');
       const pwDiv = document.createElement('div'); pwDiv.className = 'pw-cell';
       const pwVal = document.createElement('span'); pwVal.className = 'pw-cell-value masked';
@@ -4620,7 +4933,7 @@ function buildPwVault(el) {
       pwVal.textContent = '••••••••';
       makeEditHandler(pwVal, 'password', idx);
       const pwShow = document.createElement('button'); pwShow.className = 'pw-show-btn'; pwShow.textContent = '👁';
-      pwShow.title = 'Show/hide';
+      pwShow.title = 'Show/hide'; 
       pwShow.addEventListener('click', () => {
         pwVisible = !pwVisible;
         pwVal.textContent = pwVisible ? entry.password : '••••••••';
@@ -4654,10 +4967,11 @@ function buildPwVault(el) {
     addBtn.addEventListener('mouseleave', () => { addBtn.style.background=''; addBtn.style.color='var(--ink-faint)'; });
     addBtn.addEventListener('click', () => {
       entries.push({ url: '', username: '', password: '' }); save(); render();
-      // Focus the URL input of the new row after render settles
+      // Focus the URL cell of the new row after render settles
       requestAnimationFrame(() => {
-        const inputs = wrap.querySelectorAll('input[type="text"]');
-        if (inputs.length) inputs[inputs.length - 2].focus(); // -2 = last row's URL input
+        const vals = wrap.querySelectorAll('.pw-cell-value');
+        const lastGroup = vals[vals.length - 3];
+        if (lastGroup) lastGroup.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       });
     });
     wrap.appendChild(addBtn);
@@ -5277,7 +5591,7 @@ function renderTagsPanel(note) {
   tags.forEach(tag => {
     const chip = document.createElement('span'); chip.className = 'tag-chip';
     chip.textContent = '#' + tag;
-    chip.title = 'Filter by this tag';
+    chip.title = 'Search notes by this tag';
     chip.addEventListener('click', () => { setTagFilter(tag); });
     panel.appendChild(chip);
   });
@@ -5289,25 +5603,21 @@ function getAllTags() {
   return [...tags].sort();
 }
 
-function renderTagFilterBar() {
-  const bar = document.getElementById('tags-filter-bar');
-  const chips = document.getElementById('tag-filter-chips');
-  const allTags = getAllTags();
-  bar.classList.toggle('visible', allTags.length > 0);
-  chips.innerHTML = '';
-  allTags.forEach(tag => {
-    const chip = document.createElement('div'); chip.className = 'tag-filter-chip' + (activeTagFilter === tag ? ' active' : '');
-    chip.textContent = '#' + tag;
-    chip.addEventListener('click', () => setTagFilter(activeTagFilter === tag ? null : tag));
-    chips.appendChild(chip);
-  });
-}
+function renderTagFilterBar() { /* sidebar tag bar removed */ }
 
 function setTagFilter(tag) {
-  activeTagFilter = tag; renderTagFilterBar(); renderTree();
+  // Route tag clicks to the search box instead of sidebar bar
+  const searchEl = document.getElementById('search');
+  const term = '#' + tag;
+  if (searchEl.value.trim() === term) {
+    searchEl.value = ''; // toggle off
+  } else {
+    searchEl.value = term;
+  }
+  searchQuery = searchEl.value;
+  searchEl.focus();
+  renderTree();
 }
-
-document.getElementById('tag-filter-clear').addEventListener('click', () => setTagFilter(null));
 
 // Patch renderTree to apply tag filter — inject into sortedNotes
 const _origSortedNotesForTags = sortedNotes;
@@ -5756,10 +6066,16 @@ makeNoteItem = function(note, nbName, showNb) {
       el2.addEventListener('click', () => { closeCtxMenu(); fn(); });
       return el2;
     };
+    const makeSep2 = () => { const s=document.createElement('div'); s.className='ctx-sep'; return s; };
     const pinned = isNotePinned(nbName, note.filename);
     menu.appendChild(makeItem('📌', pinned?'Unpin Note':'Pin Note','',()=>togglePin(nbName,note.filename)));
+    menu.appendChild(makeSep2());
+    menu.appendChild(makeItem('✏️','Rename Note','',()=>{ const nb=findNotebook(nbName); if(nb) renameNoteByRef(nb,note,nbName); }));
+    menu.appendChild(makeItem('📂','Move to Notebook…','',()=>showMoveNoteModal(note,nbName)));
+    menu.appendChild(makeSep2());
     menu.appendChild(makeItem('📋','Duplicate Note','',()=>duplicateNote(nbName,note)));
     menu.appendChild(makeItem('⬇️','Export as Markdown','',()=>exportNoteAsMarkdown(note)));
+    menu.appendChild(makeSep2());
     menu.appendChild(makeItem('🗑️','Delete Note','danger',()=>{ const nb=findNotebook(nbName); if(nb) deleteNoteDirectly(nb,note,nbName); }));
     let x=e.clientX, y=e.clientY;
     document.body.appendChild(menu);
@@ -6062,6 +6378,351 @@ function doPrintNotebook(nbName, sortAlpha) {
 }
 
 document.getElementById('sm-print-nb').addEventListener('click', showPrintNotebookModal);
+
+// ── BULK IMPORT MARKDOWN ──
+
+function showBulkMdImportModal(){
+  closeSettingsMenu();
+  if(!dirHandle){ toast('Open a folder first.','info'); return; }
+  const bd = document.createElement('div'); bd.className='modal-backdrop';
+  const opts = ['<option value="">— Root (unfiled) —</option>'];
+  notebooks.forEach(n => {
+    if(!n.name) return;
+    const sel = (activeNotebookName===n.name||activeNotebookName===n.fullName)?' selected':'';
+    opts.push('<option value="'+escHtml(n.fullName||n.name)+'"'+sel+'>📁 '+escHtml(n.name)+'</option>');
+    (n.children||[]).forEach(sub => {
+      const ss = activeNotebookName===sub.fullName?' selected':'';
+      opts.push('<option value="'+escHtml(sub.fullName)+'"'+ss+'>　└ '+escHtml(sub.name)+'</option>');
+    });
+  });
+  bd.innerHTML = '<div class="modal wide"><h3>📥 Bulk Import Markdown</h3>'
+    +'<p style="font-size:12px;color:var(--ink-soft);font-family:Verdana,sans-serif;margin-bottom:14px">Each .md file becomes a separate note. Title comes from the first heading, or the filename.</p>'
+    +'<div class="field-row"><label>Into notebook</label><select id="bulk-nb-sel" style="flex:1;height:28px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--ink);font-size:12px;padding:0 6px">'+opts.join('')+'</select></div>'
+    +'<div style="margin-top:12px"><label id="bulk-drop" style="display:flex;flex-direction:column;align-items:center;gap:8px;border:2px dashed var(--border);border-radius:9px;padding:24px 20px;cursor:pointer;font-family:Verdana,sans-serif;font-size:12px;color:var(--ink-soft);background:var(--bg)">'
+    +'<span style="font-size:26px">📂</span><span>Click to choose files or drag &amp; drop</span>'
+    +'<span style="font-size:10px;color:var(--ink-faint)">.md and .markdown only</span>'
+    +'<input type="file" id="bulk-file-in" accept=".md,.markdown,text/markdown" multiple style="display:none"></label></div>'
+    +'<div id="bulk-list" style="margin-top:8px;max-height:130px;overflow-y:auto;font-size:11px;font-family:monospace;color:var(--ink-soft);display:none"></div>'
+    +'<div class="modal-actions" style="margin-top:14px"><button id="bulk-cancel">Cancel</button><button id="bulk-go" class="primary" disabled>📥 Import</button></div></div>';
+  document.body.appendChild(bd);
+  let chosen = [];
+  const fileIn=bd.querySelector('#bulk-file-in'), listEl=bd.querySelector('#bulk-list');
+  const goBtn=bd.querySelector('#bulk-go'), drop=bd.querySelector('#bulk-drop');
+  function setFiles(files){
+    chosen=Array.from(files).filter(f=>/\.(md|markdown)$/i.test(f.name));
+    if(!chosen.length){listEl.style.display='none';goBtn.disabled=true;return;}
+    listEl.style.display='block';
+    listEl.innerHTML=chosen.map(f=>'<div style="padding:2px 0;border-bottom:1px solid var(--border);display:flex;gap:6px"><span>📄</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escHtml(f.name)+'</span><span style="color:var(--ink-faint)">'+(f.size/1024).toFixed(1)+'KB</span></div>').join('');
+    goBtn.disabled=false;
+    goBtn.textContent='📥 Import '+chosen.length+' note'+(chosen.length>1?'s':'');
+  }
+  fileIn.addEventListener('change',()=>setFiles(fileIn.files));
+  drop.addEventListener('dragover',e=>{e.preventDefault();drop.style.borderColor='var(--accent)';});
+  drop.addEventListener('dragleave',()=>{drop.style.borderColor='var(--border)';});
+  drop.addEventListener('drop',e=>{e.preventDefault();drop.style.borderColor='var(--border)';setFiles(e.dataTransfer.files);});
+  bd.querySelector('#bulk-cancel').addEventListener('click',()=>bd.remove());
+  bd.addEventListener('click',e=>{if(e.target===bd)bd.remove();});
+  goBtn.addEventListener('click',async()=>{
+    if(!chosen.length)return;
+    const nbName=bd.querySelector('#bulk-nb-sel').value||null;
+    bd.remove();
+    await doBulkImport(chosen,nbName);
+  });
+}
+
+async function doBulkImport(files, nbName){
+  const nb=findNotebook(nbName);
+  if(!nb){toast('Notebook not found.','err');return;}
+  let ok=0,fail=0;
+  toast('Importing '+files.length+' file'+(files.length>1?'s':'')+'…','info',3000);
+  for(const file of files){
+    try{
+      const text=(await file.text()).replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+      const filename='note-'+uid()+'.html';
+      const updated=Date.now();
+      const hm=text.match(/^#{1,3}\s+(.+)$/m);
+      const title=hm?hm[1].trim():file.name.replace(/\.(md|markdown)$/i,'');
+      // Build body using same logic as working paste handler
+      const fragment=document.createDocumentFragment();
+      const codeBlockRe=/^```(\w*)\n([\s\S]*?)^```/gm;
+      let lastIndex=0,match;
+      while((match=codeBlockRe.exec(text))!==null){
+        const before=text.slice(lastIndex,match.index);
+        if(before.trim()){const d=document.createElement('div');d.innerHTML=markdownToHTML(before);while(d.firstChild)fragment.appendChild(d.firstChild);}
+        fragment.appendChild(buildCodeWidget(match[1]||'',match[2].trim()));
+        const p=document.createElement('p');p.innerHTML='<br>';fragment.appendChild(p);
+        lastIndex=match.index+match[0].length;
+      }
+      const rem=text.slice(lastIndex);
+      if(rem.trim()){const d=document.createElement('div');d.innerHTML=markdownToHTML(rem);while(d.firstChild)fragment.appendChild(d.firstChild);}
+      // Serialise to HTML string, stripping widget chrome before saving
+      const tmp=document.createElement('div');tmp.appendChild(fragment);
+      tmp.querySelectorAll('.code-widget').forEach(w=>{
+        const c=document.createElement('div');c.className='code-widget';
+        c.dataset.lang=w.dataset.lang||'';c.dataset.code=w.dataset.code||'';w.replaceWith(c);
+      });
+      const body=tmp.innerHTML;
+      const note={filename,title,body,updated,handle:null};
+      nb.notes.unshift(note);
+      if(nb.name){nb.open=true;saveOpenNBs();}
+      // Write to disk without triggering renderTree per file
+      const fh=await nb.dirHandle.getFileHandle(filename,{create:true});
+      note.handle=fh;
+      const w=await fh.createWritable();
+      let content=buildNoteHTML(title,body,updated);
+      if(sessionKey)content='NOTA_ENC:'+await encryptText(sessionKey,content);
+      await w.write(content);await w.close();
+      ok++;
+    }catch(e){console.error('Bulk import error',file.name,e);fail++;}
+  }
+  renderTree();
+  if(ok>0)openNote(nb.fullName||nb.name,nb.notes[0].filename);
+  if(fail===0)toast('✓ Imported '+ok+' note'+(ok>1?'s':'')+' into "'+(nb.name||'Root')+'"','ok',3000);
+  else toast('Imported '+ok+', failed '+fail,ok>0?'ok':'err',3500);
+}
+
+document.getElementById('sm-bulk-md-import').addEventListener('click',showBulkMdImportModal);
+
+// Three-panel: notebook panel footer button
+document.getElementById('nb-panel-add-nb').addEventListener('click', () => {
+  if(!dirHandle){ toast('Open a folder first.','info'); return; }
+  addNotebook();
+});
+
+// ══════════════════════════════════════════════════════
+// THREE-PANEL VIEW
+// ══════════════════════════════════════════════════════
+
+let threePanelActive = localStorage.getItem('nota_three_panel') === '1';
+let threePanelNb = null;      // currently selected notebook in left panel
+let npSortMode = localStorage.getItem('nota_np_sort') || 'date-desc';
+let npSearchQ = '';
+
+function applyThreePanelState() {
+  document.body.classList.toggle('three-panel', threePanelActive);
+  const btn = document.getElementById('sm-three-panel');
+  if (btn) btn.innerHTML = '<span>⫴</span> ' + (threePanelActive ? 'Exit Three-Panel View' : 'Three-Panel View');
+  if (threePanelActive) {
+    renderNotesPanel();
+    initNotesPanelResizer();
+  }
+}
+
+// hookThreePanelNbClicks: clicks are now handled directly in renderTree nb row handlers
+
+// data-nbname is now set in makeNbRow directly, and renderTree calls renderNotesPanel at its end.
+
+function getNotesForPanel() {
+  if (!threePanelNb) {
+    return getAllNotes(); // already has .nbName on each note
+  }
+  const nb = findNotebook(threePanelNb);
+  if (!nb) return [];
+  // Tag each note with its nbName for openNote
+  return nb.notes.map(n => Object.assign({}, n, { nbName: threePanelNb }));
+}
+
+function sortNotesPanel(notes) {
+  const arr = [...notes];
+  if (npSortMode === 'alpha-asc') arr.sort((a,b) => (a.title||'').localeCompare(b.title||''));
+  else if (npSortMode === 'alpha-desc') arr.sort((a,b) => (b.title||'').localeCompare(a.title||''));
+  else if (npSortMode === 'date-asc') arr.sort((a,b) => (a.updated||0) - (b.updated||0));
+  else arr.sort((a,b) => (b.updated||0) - (a.updated||0)); // date-desc default
+  return arr;
+}
+
+function renderNotesPanel() {
+  if (!threePanelActive) return;
+
+  // Title
+  const titleEl = document.getElementById('notes-panel-title');
+  if (titleEl) {
+    if (!dirHandle) titleEl.textContent = 'Open a folder first';
+    else if (!threePanelNb) titleEl.textContent = 'All Notes';
+    else titleEl.textContent = threePanelNb.includes('/') ? threePanelNb.replace(/\//g, ' › ') : threePanelNb;
+  }
+
+  // Add button
+  const addBtn = document.getElementById('notes-panel-add');
+  if (addBtn) addBtn.disabled = !dirHandle;
+
+  const list = document.getElementById('notes-panel-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (!dirHandle) return;
+
+  // Make the list a drop target so notes can be dragged in from the tree
+  list.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect='move'; list.classList.add('drag-over-nb'); };
+  list.ondragleave = e => { if(!list.contains(e.relatedTarget)) list.classList.remove('drag-over-nb'); };
+  list.ondrop = async e => {
+    e.preventDefault(); e.stopPropagation(); list.classList.remove('drag-over-nb');
+    if(!threePanelNb) return; // can't drop into "All Notes"
+    let data; try{ data=JSON.parse(e.dataTransfer.getData('text/plain')); }catch(ex){ return; }
+    const { filename, fromNb } = data;
+    if(fromNb===threePanelNb) return;
+    await moveNote(filename, fromNb, threePanelNb);
+    renderNotesPanel();
+  };
+
+  let notes = getNotesForPanel();
+
+  // Filter by search
+  if (npSearchQ) {
+    const q = npSearchQ.toLowerCase();
+    notes = notes.filter(n => (n.title||'').toLowerCase().includes(q) || plainText(n.body||'').toLowerCase().includes(q));
+  }
+
+  notes = sortNotesPanel(notes);
+
+  if (!notes.length) {
+    list.innerHTML = '<div class="empty-list"><div class="big">📝</div>No notes yet.</div>';
+    return;
+  }
+
+  notes.forEach(note => {
+    const nbName = note.nbName !== undefined ? note.nbName : threePanelNb;
+    const el = document.createElement('div');
+    const isActive = note.filename === activeFilename && nbName === activeNotebookName;
+    const isUnsaved = unsaved.has(noteKey(nbName, note.filename));
+    el.className = 'note-item' + (isActive ? ' active' : '') + (isUnsaved ? ' unsaved' : '');
+    el.style.cssText = 'padding: 4px 10px 4px 12px; margin: 1px 4px; border-radius: 5px;';
+
+    el.innerHTML = `<div class="note-item-title">${escHtml(note.title||'Untitled')}</div>`;
+
+    el.addEventListener('click', () => {
+      openNote(nbName, note.filename);
+    });
+    // Drag to move note to another notebook
+    el.draggable = true;
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', JSON.stringify({ filename: note.filename, fromNb: nbName }));
+      e.dataTransfer.effectAllowed = 'move';
+      el.style.opacity = '0.5';
+    });
+    el.addEventListener('dragend', () => { el.style.opacity = ''; });
+    el.addEventListener('contextmenu', e => {
+      e.preventDefault(); e.stopPropagation();
+      closeCtxMenu();
+      const menu = document.createElement('div'); menu.className = 'ctx-menu';
+      const mkI = (icon, label, cls, fn) => {
+        const d = document.createElement('div');
+        d.className = 'ctx-item' + (cls ? ' '+cls : '');
+        d.innerHTML = `<span style="font-size:13px">${icon}</span><span>${label}</span>`;
+        d.addEventListener('click', () => { closeCtxMenu(); fn(); });
+        return d;
+      };
+      const mkS = () => { const s=document.createElement('div'); s.className='ctx-sep'; return s; };
+      const pinned = isNotePinned(nbName, note.filename);
+      menu.appendChild(mkI('📌', pinned?'Unpin':'Pin Note','',()=>togglePin(nbName,note.filename)));
+      menu.appendChild(mkS());
+      menu.appendChild(mkI('✏️','Rename Note','',()=>{ const nb=findNotebook(nbName); if(nb) renameNoteByRef(nb,note,nbName); }));
+      menu.appendChild(mkI('📂','Move to Notebook…','',()=>showMoveNoteModal(note,nbName)));
+      menu.appendChild(mkS());
+      menu.appendChild(mkI('📋','Duplicate Note','',()=>duplicateNote(nbName,note)));
+      menu.appendChild(mkI('⬇️','Export as Markdown','',()=>exportNoteAsMarkdown(note)));
+      menu.appendChild(mkS());
+      menu.appendChild(mkI('🗑️','Delete Note','danger',()=>{ const nb2=findNotebook(nbName); if(nb2) deleteNoteDirectly(nb2,note,nbName); renderNotesPanel(); }));
+      let x=e.clientX, y=e.clientY;
+      document.body.appendChild(menu);
+      if(x+menu.offsetWidth>window.innerWidth) x=window.innerWidth-menu.offsetWidth-8;
+      if(y+menu.offsetHeight>window.innerHeight) y=window.innerHeight-menu.offsetHeight-8;
+      menu.style.left=x+'px'; menu.style.top=y+'px';
+      const close=ev=>{if(!menu.contains(ev.target)){closeCtxMenu();document.removeEventListener('mousedown',close);}};
+      setTimeout(()=>document.addEventListener('mousedown',close),0);
+    });
+    list.appendChild(el);
+  });
+}
+
+// Notes panel search
+document.getElementById('notes-panel-search').addEventListener('input', function() {
+  npSearchQ = this.value;
+  renderNotesPanel();
+});
+
+// Notes panel sort buttons
+document.querySelectorAll('.np-sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    npSortMode = btn.dataset.sort;
+    localStorage.setItem('nota_np_sort', npSortMode);
+    document.querySelectorAll('.np-sort-btn').forEach(b => b.classList.toggle('active', b === btn));
+    renderNotesPanel();
+  });
+});
+
+// Mark the saved sort button active on load
+document.querySelectorAll('.np-sort-btn').forEach(b => {
+  b.classList.toggle('active', b.dataset.sort === npSortMode);
+});
+
+// Add note from notes panel
+document.getElementById('notes-panel-add').addEventListener('click', () => {
+  addNote(threePanelNb);
+});
+
+// Notes panel resizer
+let npResizerInited = false;
+function initNotesPanelResizer() {
+  if (npResizerInited) return;
+  npResizerInited = true;
+  const resizer = document.getElementById('notes-panel-resizer');
+  const panel = document.getElementById('notes-panel');
+  let dragging = false, startX, startW;
+  const MIN = 160, MAX = 420;
+
+  const saved = localStorage.getItem('nota_np_w');
+  if (saved) {
+    const w = parseInt(saved);
+    if (w >= MIN && w <= MAX) {
+      panel.style.width = w + 'px';
+      document.documentElement.style.setProperty('--notes-panel-w', w + 'px');
+    }
+  }
+
+  resizer.addEventListener('mousedown', e => {
+    dragging = true; startX = e.clientX; startW = panel.offsetWidth;
+    resizer.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const newW = Math.max(MIN, Math.min(MAX, startW + (e.clientX - startX)));
+    panel.style.width = newW + 'px';
+    document.documentElement.style.setProperty('--notes-panel-w', newW + 'px');
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    resizer.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    localStorage.setItem('nota_np_w', panel.offsetWidth);
+  });
+}
+
+// Toggle from settings menu
+document.getElementById('sm-three-panel').addEventListener('click', () => {
+  closeSettingsMenu();
+  threePanelActive = !threePanelActive;
+  localStorage.setItem('nota_three_panel', threePanelActive ? '1' : '');
+  applyThreePanelState();
+  renderTree();
+});
+
+// Apply on load
+if (threePanelActive) {
+  document.addEventListener('DOMContentLoaded', () => applyThreePanelState(), { once: true });
+  // Also try immediately in case DOMContentLoaded already fired
+  if (document.readyState !== 'loading') applyThreePanelState();
+}
+// Always set button label
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('sm-three-panel');
+  if (btn) btn.innerHTML = '<span>⫴</span> ' + (threePanelActive ? 'Exit Three-Panel View' : 'Three-Panel View');
+}, { once: true });
 
 </script>
 </body>
